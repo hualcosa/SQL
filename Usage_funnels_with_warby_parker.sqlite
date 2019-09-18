@@ -1,0 +1,81 @@
+/* Take a look at the first ten columns of the survey table */
+ SELECT *
+ FROM survey
+ LIMIT 10;
+
+/* Return the number of responses for each question */
+SELECT question, COUNT(DISTINCT user_id) AS 'Number of responses'
+FROM survey
+WHERE response IS NOT NULL
+GROUP BY question;
+
+/*
+Question number 	Percent completing this question
+1									100%
+2									95%
+3									80%
+4									95%
+5									75%
+*/
+
+/* Take a look at the first five rows of the next three tables */
+SELECT *
+FROM quiz
+LIMIT 5;
+
+SELECT *
+FROM home_try_on
+LIMIT 5;
+
+SELECT *
+FROM purchase
+LIMIT 5;
+
+
+/* Creates a new table for more complex calculations */
+SELECT DISTINCT q.user_id, h.user_id IS NOT NULL AS 'is_home_try_on',
+h.number_of_pairs, p.user_id IS NOT NULL AS 'is_purchased'
+FROM quiz AS q
+LEFT JOIN home_try_on AS h
+  ON q.user_id = h.user_id
+LEFT JOIN purchase AS p
+  ON p.user_id = q.user_id
+
+/* calculate overall conversion rates by aggregating across all rows.
+   compare conversion from quiz→home_try_on and home_try_on→purchase.
+
+*/
+WITH funnel AS(
+  SELECT DISTINCT q.user_id, h.user_id IS NOT NULL AS 'is_home_try_on',
+  h.number_of_pairs, p.user_id IS NOT NULL AS 'is_purchased'
+  FROM quiz AS q
+  LEFT JOIN home_try_on AS h
+    ON q.user_id = h.user_id
+  LEFT JOIN purchase AS p
+    ON p.user_id = q.user_id
+  )
+SELECT COUNT(user_id) AS 'Number of distinct users',
+        SUM(is_home_try_on) AS 'Convertion quis -> home_try_on',
+        SUM(is_purchased) AS 'Convertion home_try_on -> purchase'
+FROM funnel;
+
+/* Compare the AB test results.
+   Control group had 3  pairs for the home_try_on program
+   Variant group had 5 pairs for the home_try_on program
+   We want to analyse if the biggest availability in the number_of_pairs
+   results in a bigger amount of purchases*/
+WITH funnel AS(
+SELECT DISTINCT q.user_id, h.user_id IS NOT NULL AS 'is_home_try_on',
+h.number_of_pairs, p.user_id IS NOT NULL AS 'is_purchased'
+FROM quiz AS q
+LEFT JOIN home_try_on AS h
+  ON q.user_id = h.user_id
+LEFT JOIN purchase AS p
+  ON p.user_id = q.user_id
+)
+SELECT COUNT(CASE
+            WHEN number_of_pairs = '3 pairs' AND is_purchased = 1 THEN user_id END) AS 'Control_purchases',
+        COUNT(CASE
+            WHEN number_of_pairs = '5 pairs' AND is_purchased = 1 THEN user_id END) AS 'Variant_purchases'
+FROM funnel
+LIMIT 10;

@@ -1,0 +1,43 @@
+SELECT *
+FROM met
+LIMIT 10;
+
+/* Count the amount of art pieces */
+SELECT COUNT(id) AS 'Amount of art pieces'
+FROM met;
+
+/* Count the number of pieces where category includes 'Celery' */
+SELECT COUNT(id)
+FROM met
+WHERE category LIKE '%celery%';
+
+/* Return the date of the oldest piece */
+SELECT MIN(date) AS 'Oldest piece of art'
+FROM met;
+
+/* Return the 10 countries that have produced more art pieces */
+SELECT country, COUNT(*) AS 'Number of art pieces'
+FROM met
+WHERE country IS NOT NULL
+GROUP BY country
+ORDER BY COUNT(*) DESC
+LIMIT 10;
+
+/* Return the categories having more than 100 pieces */
+SELECT category, COUNT(*) AS 'Number of Art pieces'
+FROM met
+GROUP BY category
+HAVING COUNT(*) > 100
+ORDER BY COUNT(*) DESC;
+
+/* Count the number of pieces where the medium contains 'gold' or 'silver' */
+SELECT CASE
+ WHEN medium LIKE '%gold%' THEN 'Gold'
+ WHEN medium LIKE '%silver%' THEN 'Silver'
+ ELSE NULL
+ END AS 'Bling',
+ COUNT(*)
+FROM  met
+WHERE Bling IS NOT NULL
+GROUP BY 1
+ORDER BY 2 DESC;

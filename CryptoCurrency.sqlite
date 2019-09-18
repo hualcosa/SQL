@@ -1,0 +1,35 @@
+
+/* Return the total 'money_in' in the table */
+SELECT SUM(money_in) AS 'Total money in money_in transactions'
+FROM transactions;
+
+/* Return the total 'money_out' in the table */
+SELECT SUM(money_out) AS 'Total money in money_out transactions'
+FROM transactions;
+
+/* Count how many 'money_in' transactions are in the table */
+SELECT COUNT(*) AS 'Number of money_in transactions'
+FROM transactions
+WHERE money_in IS NOT NULL;
+
+/* Count how many 'money_in' (where bitcoin is the currency) are in the table */
+SELECT COUNT(*) AS 'Number of Bitcoin money_in transactions'
+FROM transactions
+WHERE money_in IS NOT NULL AND currency = 'BIT';
+
+/* Return the largest transaction of the table */
+SELECT MAX(MAX(money_in), MAX(money_out)) AS 'Largest transaction'
+FROM transactions;
+
+/* Return the average 'money_in' for the currency Ethereum */
+SELECT AVG(money_in) AS 'Average Ethereum money_in transaction'
+FROM transactions
+WHERE currency = 'ETH';
+
+/* Build a ledger for different dates */
+SELECT date,
+ROUND(AVG(money_in), 2) AS 'Average money_in transaction',
+ROUND(AVG(money_out), 2) AS 'Average money_out transaction'
+FROM transactions
+GROUP BY date
+ORDER BY date;

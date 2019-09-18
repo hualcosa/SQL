@@ -1,0 +1,44 @@
+/* take a glance at the table:
+SELECT *
+FROM startups;
+*/
+
+/* Calculate the total number of companies in the table */
+SELECT COUNT(*)
+FROM startups;
+
+/* Calculate the total value of all companies */
+SELECT SUM(valuation)
+FROM startups;
+
+/* Returns the maximum amount of money raised */
+SELECT MAX(raised)
+FROM startups
+WHERE stage = 'Seed';
+
+/* Discorver the foundation year of the oldest company founded */
+SELECT MIN(founded)
+FROM startups;
+
+/* Calculate the average valuation */
+SELECT AVG(valuation)
+FROM startups;
+
+/* Calculate the average valuation by category */
+SELECT category, ROUND(AVG(valuation), 2)
+FROM startups
+GROUP BY category
+ORDER BY 2 DESC;
+
+/* Return the name of each category with the total number of companies tha belong to it */
+SELECT category, COUNT(category)
+FROM startups
+GROUP BY category
+HAVING COUNT(category) > 3
+ORDER BY 2 DESC;
+
+/* Calculate the average size of startups grouped by their location */
+SELECT location, AVG(employees)
+FROM startups
+GROUP BY location
+HAVING AVG(employees) > 500;

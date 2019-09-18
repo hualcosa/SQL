@@ -1,0 +1,50 @@
+/* Creates a table named friends */
+CREATE TABLE friends (
+	id INTEGER,
+  name TEXT,
+  birthday DATE
+);
+
+/* Inserts the information about a friend named Jane */
+INSERT INTO friends (id, name, birthday)
+VALUES (1, 'Jane Doe', '1990-05-30');
+
+
+/* adds two more friends */
+INSERT INTO friends (id, name, birthday)
+VALUES (2, 'Julia Oliveira', '1997-05-24');
+INSERT INTO friends (id, name, birthday)
+VALUES (3, 'Marcia Albuquerque', '1964-11-24');
+
+/* Updates the name of Jane */
+UPDATE friends
+SET name = 'Jane Smith'
+where id = 1;
+
+/* Adds a column named email */
+ALTER TABLE friends
+ADD COLUMN email TEXT;
+
+/* Updates the email adress for everyone in the table */
+UPDATE friends
+SET email = 'jane@codecademy.com'
+where id = 1;
+UPDATE friends
+SET email = 'julia@codecademy.com'
+where id = 2;
+UPDATE friends
+SET email = 'marcia@codecademy.com'
+where id = 3;
+
+/* Deletes Jane from the table */
+DELETE FROM friends
+WHERE id = 1;
+
+/* Select all the columns from friends table */
+SELECT *
+FROM FRIENDS;
+
+
+
+
+
